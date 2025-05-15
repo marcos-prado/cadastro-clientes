@@ -1,7 +1,7 @@
 import streamlit as st
 import mysql.connector
 import crud
-
+import pandas as pd
 
 def main():
     st.title("Cadastro de Clientes")
@@ -16,7 +16,7 @@ def main():
         st.subheader("Cadastrar um cliente")
         nome = st.text_input("Informe o nome do cliente:")
         endereco = st.text_input("Informe o endereço:")
-        dt_nasc = st.date_input("Informe a data de nascimento")
+        dt_nasc = st.date_input("Informe a data de nascimento", value='today', format='DD/MM/YYYY')
         tipo_cliente = st.selectbox(
             "Tipo do Cliente", ["Pessoa Física", "Pessoa Juridica"]
         )
@@ -33,8 +33,15 @@ def main():
         st.subheader("Registros Disponíveis")
         crud.mycursor.execute("SELECT * FROM cliente")
         result = crud.mycursor.fetchall()
-        for row in result:
-            st.write(row)
+        df = pd.DataFrame(result, columns=crud.mycursor.column_names)
+        df.columns = [
+            "Registro",
+            "Nome",
+            "Endereço",
+            "Data de Nascimento",
+            "Tipo de Cliente",
+        ]
+        st.dataframe(df)
 
     elif option == "Atualizar":
         st.subheader("Atualizar um Registro")
@@ -47,7 +54,7 @@ def main():
         )
         if st.button("Atualizar Dados"):
             sql = "UPDATE cliente SET nome=%s,endereco=%s,dt_nasc=%s,tipo_cliente=%s WHERE id =%s"
-            val = (nome, endereco, dt_nasc, tipo_cliente,id)
+            val = (nome, endereco, dt_nasc, tipo_cliente, id)
             crud.mycursor.execute(sql, val)
             crud.mydb.commit()
             st.success("Dados Atualizados com Sucesso!!!")
@@ -65,3 +72,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#https://www.youtube.com/watch?v=9mnNSMCu3dI - Continuar

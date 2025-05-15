@@ -1,13 +1,12 @@
 import mysql.connector
 
-#Estabelecendo a conexão com o Mysql
+#Estabelecendo a conexão com o banco de dados
 
 mydb = mysql.connector.connect(
     host="localhost",
-    user="Informe o seu usuario",
-    password="Informe a sua senha",
-    database="informe o seu banco"
+    user="marcos",
+    password="A0a222***",
+    database="clientes"
 )
 mycursor=mydb.cursor()
 print("Conexão realizada com sucesso")
-
